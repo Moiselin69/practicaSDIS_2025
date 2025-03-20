@@ -44,7 +44,9 @@ public class Cliente {
                         mensajeProtocolo = (MensajeProtocolo) ois.readObject();
                         if (mensajeProtocolo.getPrimitiva() == Primitiva.XAUTH)
                             System.out.println(mensajeProtocolo.getMensaje());
-                        else{
+                        else if (mensajeProtocolo.getPrimitiva() == Primitiva.ERROR) {
+                            System.out.println(mensajeProtocolo.getMensaje());
+                        } else{
                             mensajeProtocolo = new MensajeProtocolo(Primitiva.BADCODE);
                             oos.writeObject(mensajeProtocolo);
                         }
@@ -93,11 +95,12 @@ public class Cliente {
                         mensajeProtocolo = (MensajeProtocolo) ois.readObject();
                         if (mensajeProtocolo.getPrimitiva() == Primitiva.INFO)
                             System.out.println(mensajeProtocolo.getMensaje());
-                        else{
+                        else if (mensajeProtocolo.getPrimitiva() == Primitiva.NOTAUTH) {
+                            System.out.println(mensajeProtocolo.getMensaje());
+                        } else{
                             mensajeProtocolo = new MensajeProtocolo(Primitiva.BADCODE);
                             oos.writeObject(mensajeProtocolo);
                         }
-                        System.out.println(mensajeProtocolo.getMensaje());
                     } else if (mensajeEnviar.equals("DELETE")) {
                         System.out.println("Cola que deseas borrar: ");
                         mensajeEnviarNombre = scanner.nextLine();

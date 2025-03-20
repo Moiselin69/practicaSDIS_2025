@@ -158,9 +158,10 @@ class Sirviente implements Runnable {
                                      */
                                 }
                                 mensajeProtocolo = new MensajeProtocolo(Primitiva.ERROR, "Credentials does not match our records. Enter username again: ");
+                                oos.writeObject(mensajeProtocolo);
                                 usuarioCliente = "";
                                 contraCliente = "";
-                                oos.writeObject(mensajeProtocolo);
+
                                 /*
                                 En la linea 161 y 162, volvemos a resetear no sea que se haya fallado y quede guardado alguna de las dos
                                 para posteriores acciones
@@ -201,7 +202,7 @@ class Sirviente implements Runnable {
                                 mensajeProtocolo = new MensajeProtocolo(Primitiva.ADDED);
                                 oos.writeObject(mensajeProtocolo);
                             }else{// cuando no se es admin, ni está la cola presente se llega a este apartado
-                                mensajeProtocolo = new MensajeProtocolo(Primitiva.NOTAUTH, "No existe la cola de mensajes");
+                                mensajeProtocolo = new MensajeProtocolo(Primitiva.NOTAUTH, "No existe la cola de mensajes y no eres administrador para poder crear una");
                                 oos.writeObject(mensajeProtocolo);
                             }
                         }else{ // cuando no se esta loggeado se llega a este apartado
