@@ -7,7 +7,7 @@ Desde Linux:
 
 2º: cd Compilador_Lanzador
 
-3º: chmod +x compilador.bs lanzarClienteLinux.bs lanzarClienteWindows.bs lanzarServidorLinux.bs lanzarServidorWindows.bs
+3º: chmod +x compiladorLinux.bs compiladorWindows.bat lanzarClienteLinux.bs lanzarClienteWindows.bat lanzarServidorLinux.bs lanzarServidorWindows.bat
 
 4º: ./compilador.bs
 
