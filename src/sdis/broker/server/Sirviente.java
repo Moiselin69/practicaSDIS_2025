@@ -247,6 +247,8 @@ class Sirviente implements Runnable {
                         if (usuarioCliente.equals("admin")){
                             if (multiMapa.contains(mensajeProtocolo.getMensaje())){
                                 multiMapa.delCola(mensajeProtocolo.getMensaje());
+                                mensajeProtocolo = new MensajeProtocolo(Primitiva.DELETED);
+                                oos.writeObject(mensajeProtocolo);
                             }else{
                                 mensajeProtocolo = new MensajeProtocolo(Primitiva.EMPTY, "Cola no existente");
                                 oos.writeObject(mensajeProtocolo);
@@ -255,6 +257,11 @@ class Sirviente implements Runnable {
                             mensajeProtocolo = new MensajeProtocolo(Primitiva.NOTAUTH, "Usted no está loggeado como administrador para ejecutar este mensaje...");
                             oos.writeObject(mensajeProtocolo);
                         }
+                        break;
+                    case BADCODE:
+                        mensajeProtocolo = new MensajeProtocolo(Primitiva.INFO, "Perdón por la equivocación, vuelve a enviar el mensaje");
+                        oos.writeObject(mensajeProtocolo);
+                        break;
                     default:
                         mensajeProtocolo = new MensajeProtocolo(Primitiva.BADCODE);
                         oos.writeObject(mensajeProtocolo);

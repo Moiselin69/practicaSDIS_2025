@@ -110,11 +110,15 @@ public class Cliente {
                         if (mensajeProtocolo.getPrimitiva() == Primitiva.DELETED)
                             System.out.println("Cola borrada con exito");
                         else if (mensajeProtocolo.getPrimitiva() == Primitiva.EMPTY)
-                            System.out.println("No existe la cola");
-                        else{
+                            System.out.println(mensajeProtocolo.getMensaje());
+                        else if (mensajeProtocolo.getPrimitiva() == Primitiva.NOTAUTH)
+                            System.out.println(mensajeProtocolo.getMensaje());
+                         else{
                             mensajeProtocolo = new MensajeProtocolo(Primitiva.BADCODE);
                             oos.writeObject(mensajeProtocolo);
                         }
+                    }else{
+                        System.out.println("No se ha entendido el comando, vuelva a escribir el comando");
                     }
                 }
             }catch (Exception e){
