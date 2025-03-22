@@ -74,7 +74,7 @@ public class Cliente {
                         mensajeProtocolo = (MensajeProtocolo) ois.readObject();
                         if (mensajeProtocolo.getPrimitiva() == Primitiva.MSG){
                             System.out.println("El mensaje recibido es: ");
-                            System.out.println(mensajeProtocolo.getMensaje());
+                            System.out.println(mensajeProtocolo.getIdCola());
                         } else if (mensajeProtocolo.getPrimitiva() == Primitiva.NOTAUTH) {
                             System.out.println(mensajeProtocolo.getMensaje());
                         } else if (mensajeProtocolo.getPrimitiva() == Primitiva.EMPTY) {
@@ -110,7 +110,7 @@ public class Cliente {
                         if (mensajeProtocolo.getPrimitiva() == Primitiva.DELETED)
                             System.out.println("Cola borrada con exito");
                         else if (mensajeProtocolo.getPrimitiva() == Primitiva.EMPTY)
-                            System.out.println(mensajeProtocolo.getMensaje());
+                            System.out.println("La cola no existe");
                         else if (mensajeProtocolo.getPrimitiva() == Primitiva.NOTAUTH)
                             System.out.println(mensajeProtocolo.getMensaje());
                          else{

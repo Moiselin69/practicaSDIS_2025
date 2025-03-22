@@ -212,7 +212,7 @@ class Sirviente implements Runnable {
                         break;
                     case READQ:
                         if (!usuarioCliente.isEmpty()) { // se accede a las lineas de abajo cuando el cliente se ha loggeado
-                            mensajeEnviar = multiMapa.pull(mensajeProtocolo.getIdCola()); // extraemos el mensaje del multi mapa
+                            mensajeEnviar = multiMapa.pull(mensajeProtocolo.getMensaje()); // extraemos el mensaje del multi mapa
                             if (mensajeEnviar == null){ // si es null significa que no hay cola, o mensajes que extraer por que devolvemos un mensaje protocolo con primitiva EMPTY
                                 mensajeProtocolo = new MensajeProtocolo(Primitiva.EMPTY);
                                 oos.writeObject(mensajeProtocolo);

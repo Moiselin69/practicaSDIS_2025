@@ -19,11 +19,10 @@ public class MensajeProtocolo implements java.io.Serializable {
     public MensajeProtocolo(Primitiva p, String mensaje) throws MalMensajeProtocoloException {
         if (p == Primitiva.INFO || p == Primitiva.ADDED || p == Primitiva.NOTAUTH
                 || p == Primitiva.XAUTH || p == Primitiva.ERROR || p == Primitiva.EXIT
-                || p == Primitiva.MSG || p == Primitiva.STATE || p == Primitiva.DELETEQ
-                || p == Primitiva.EMPTY) {
+                || p == Primitiva.READQ || p == Primitiva.STATE || p == Primitiva.DELETEQ) {
             this.mensaje = mensaje;
             this.idCola  = null;
-        } else if (p == Primitiva.READQ) {
+        } else if (p == Primitiva.MSG) {
             this.idCola  = mensaje;
             this.mensaje = null;
         } else
