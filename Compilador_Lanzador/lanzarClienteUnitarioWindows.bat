@@ -1,7 +1,6 @@
 @echo off
 REM Lanzar Cliente Unitario Windows
 cd ..
-cd out
 echo Se lanzará el cliente unitario Auth
 java -cp "out;libs/*" sdis.broker.client.util.Auth
 
