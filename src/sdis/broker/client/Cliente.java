@@ -126,6 +126,7 @@ public class Cliente {
                     }
                 }
             }catch (Exception e){
+                System.out.println("Ha surgido un error raro en el cliente");
                 System.out.println(e.getLocalizedMessage());
             }
 

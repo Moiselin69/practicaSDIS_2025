@@ -304,6 +304,7 @@ class Sirviente implements Runnable {
             }
         }
         catch (Exception e){
+            System.out.println("Ha surgido un error raro en el sirviente");
             System.out.println(e.getLocalizedMessage());
         }
     }

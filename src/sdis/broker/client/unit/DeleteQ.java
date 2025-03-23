@@ -52,6 +52,7 @@ public class DeleteQ {
             if (mensajeProtocolo.getPrimitiva() != Primitiva.BADCODE)
                 System.out.println("ERROR, no se ha recibido BADCODE");
             System.out.println("Se ha ejcutado todos los casos, si no han surgido errores, significa que esta todo correcto");
+            oos.writeObject(new MensajeProtocolo(Primitiva.EXIT));
         }catch (Exception e){
             System.out.println(e.getLocalizedMessage());
         }
