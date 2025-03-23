@@ -1,7 +1,5 @@
 @echo off
 cd ..
 mkdir out
-for /R src %%f in (*.java) do (
-    javac -d out -cp "libs/*" "%%f"
-)
+javac -d out -cp "libs/*" src/**/*.java
 echo Compilación finalizada.
