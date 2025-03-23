@@ -1,5 +1,7 @@
 @echo off
 cd ..
-mkdir -p out
-# Compilar el proyecto
-javac -d out -cp "libs/*" $(find src -name "*.java")
+mkdir out
+for /R src %%f in (*.java) do (
+    javac -d out -cp "libs/*" "%%f"
+)
+echo Compilación finalizada.
