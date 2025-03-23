@@ -124,6 +124,9 @@ class Sirviente implements Runnable {
                 switch (mensajeProtocolo.getPrimitiva()){
                     case EXIT:
                         mensajeProtocolo = new MensajeProtocolo(Primitiva.EXIT, "Se va a cerrar conexion...Hasta pronto");
+                        oos.writeObject(mensajeProtocolo);
+                        listaIps.restarUna(socket.getInetAddress());
+                        System.out.println("[BM] (connections) for IP /" +socket.getInetAddress().toString()+" = "+listaIps.getNumFallos(socket.getInetAddress()));
                         oos.close();
                         ois.close();
                         socket.close();
@@ -135,8 +138,11 @@ class Sirviente implements Runnable {
                         usuarioCliente = ""; // aqui es donde reseteamos el usuario cliente, para que no haya fallos al hacer LOGGIN
                         contraCliente = "";
                         usuarioCliente = mensajeProtocolo.getIdCola(); // en la cola de la primitiva XAUTH viene el nombre del usuario
-                        contraCliente = mensajeProtocolo.getMensaje(); // en el mensaje de la primitiva XAUTH viene la contraseña del usuario
-                        if (usuariosHashMap.containsKey(usuarioCliente)) // verificamos que el usuario existe en el hashMap
+                        contraCliente = mensajeProtocolo.getMensaje();
+                        if (mensajeProtocolo.getIdCola() == null || mensajeProtocolo.getMensaje() == null){
+                            mensajeProtocolo = new MensajeProtocolo(Primitiva.BADCODE, "La primitiva XAUTH tiene que tener mensaje y cola");
+                            oos.writeObject(mensajeProtocolo);
+                        } else if (usuariosHashMap.containsKey(usuarioCliente)) // verificamos que el usuario existe en el hashMap
                             if (usuariosHashMap.get(usuarioCliente).equals(contraCliente)) { // verificamos que la contraseña sea el valor en el hashMap
                                 mensajeProtocolo = new MensajeProtocolo(Primitiva.XAUTH, "User successfully logged");
                                 oos.writeObject(mensajeProtocolo); // en la linea 141 preparamos el mensaje, y en la 142 lo enviamos
@@ -188,7 +194,11 @@ class Sirviente implements Runnable {
                         }
                         break;
                     case ADDMSG:
-                        if(!usuarioCliente.isEmpty()) { // aqui comprobamos que el usuario este registrado
+                        if (mensajeProtocolo.getIdCola() == null || mensajeProtocolo.getMensaje() == null){
+                            mensajeProtocolo = new MensajeProtocolo(Primitiva.BADCODE, "La primitiva ADDMSG tiene que tener mensaje y cola");
+                            oos.writeObject(mensajeProtocolo);
+                        }
+                        else if(!usuarioCliente.isEmpty()) { // aqui comprobamos que el usuario este registrado
                             if (multiMapa.contains(mensajeProtocolo.getIdCola())){ // aqui comprobamos que la cola que solicita el cliente esté activa
                                 multiMapa.push(mensajeProtocolo.getIdCola(), mensajeProtocolo.getMensaje()); // si lo esta introducimos el mensaje en a cola
                                 mapaMensajesAddRead.get(mensajeProtocolo.getIdCola()).sumaUnaAdd(); // sumamos a uno el valor de depuracion de mensajes añadidos a la cola
@@ -211,14 +221,18 @@ class Sirviente implements Runnable {
                         }
                         break;
                     case READQ:
-                        if (!usuarioCliente.isEmpty()) { // se accede a las lineas de abajo cuando el cliente se ha loggeado
+                        if (mensajeProtocolo.getMensaje() == null){
+                            mensajeProtocolo = new MensajeProtocolo(Primitiva.BADCODE, "La primitiva READMSG tiene que tener mensaje");
+                            oos.writeObject(mensajeProtocolo);
+                        }
+                        else if (!usuarioCliente.isEmpty()) { // se accede a las lineas de abajo cuando el cliente se ha loggeado
                             mensajeEnviar = multiMapa.pull(mensajeProtocolo.getMensaje()); // extraemos el mensaje del multi mapa
                             if (mensajeEnviar == null){ // si es null significa que no hay cola, o mensajes que extraer por que devolvemos un mensaje protocolo con primitiva EMPTY
                                 mensajeProtocolo = new MensajeProtocolo(Primitiva.EMPTY);
                                 oos.writeObject(mensajeProtocolo);
                             }
                             else {
-                                mapaMensajesAddRead.get(mensajeProtocolo.getIdCola()).sumaUnaRead();
+                                mapaMensajesAddRead.get(mensajeProtocolo.getMensaje()).sumaUnaRead();
                                 mensajeProtocolo = new MensajeProtocolo(Primitiva.MSG, mensajeEnviar);
                                 oos.writeObject(mensajeProtocolo);
                                 /*
@@ -232,7 +246,11 @@ class Sirviente implements Runnable {
                             oos.writeObject(mensajeProtocolo);
                         }
                         break;
-                    case STATE: // Primitiva exclusiva del administrador
+                    case STATE:
+                        if(mensajeProtocolo.getMensaje() == null){
+                            mensajeProtocolo = new MensajeProtocolo(Primitiva.BADCODE, "La primitiva STATE necesita tener el apartado de mensaje no null");
+                            oos.writeObject(mensajeProtocolo);
+                        }// Primitiva exclusiva del administrador
                         if (usuarioCliente.equals("admin")){
                             mensajeProtocolo = new MensajeProtocolo(Primitiva.INFO, ""+numHilosTotales+":"+executor.getActiveCount()+
                                     ":"+mapaMensajesAddRead.get(mensajeProtocolo.getMensaje()).getContadorAdd()
@@ -244,13 +262,17 @@ class Sirviente implements Runnable {
                         }
                         break;
                     case DELETEQ: //primitiva exclusiva del administrador
+                        if (mensajeProtocolo.getMensaje() == null){
+                            mensajeProtocolo = new MensajeProtocolo(Primitiva.BADCODE, "La primitiva DELETEQ tiene que tener un mensaje");
+                            oos.writeObject(mensajeProtocolo);
+                        }
                         if (usuarioCliente.equals("admin")){
                             if (multiMapa.contains(mensajeProtocolo.getMensaje())){
                                 multiMapa.delCola(mensajeProtocolo.getMensaje());
                                 mensajeProtocolo = new MensajeProtocolo(Primitiva.DELETED);
                                 oos.writeObject(mensajeProtocolo);
                             }else{
-                                mensajeProtocolo = new MensajeProtocolo(Primitiva.EMPTY, "Cola no existente");
+                                mensajeProtocolo = new MensajeProtocolo(Primitiva.EMPTY);
                                 oos.writeObject(mensajeProtocolo);
                             }
                         }else{
@@ -263,7 +285,7 @@ class Sirviente implements Runnable {
                         oos.writeObject(mensajeProtocolo);
                         break;
                     default:
-                        mensajeProtocolo = new MensajeProtocolo(Primitiva.BADCODE);
+                        mensajeProtocolo = new MensajeProtocolo(Primitiva.BADCODE, "No se ha podido leer correctamente la primitiva");
                         oos.writeObject(mensajeProtocolo);
 
                 }
@@ -282,7 +304,7 @@ class Sirviente implements Runnable {
             }
         }
         catch (Exception e){
-            e.printStackTrace();
+            System.out.println(e.getLocalizedMessage());
         }
     }
 }

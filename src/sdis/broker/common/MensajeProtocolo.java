@@ -8,7 +8,7 @@ public class MensajeProtocolo implements java.io.Serializable {
     /* Constructor para PUSH_OK, EMPTY, NOTUNDERSTAND, EXIT, STATE */
     public MensajeProtocolo(Primitiva p) throws MalMensajeProtocoloException {
         if (p == Primitiva.ADDED || p == Primitiva.EMPTY
-                || p == Primitiva.EXIT || p == Primitiva.DELETED || p == Primitiva.BADCODE) {
+                || p == Primitiva.EXIT || p == Primitiva.DELETED) {
             this.primitiva = p;
             this.mensaje = this.idCola = null;
         } else
@@ -19,7 +19,8 @@ public class MensajeProtocolo implements java.io.Serializable {
     public MensajeProtocolo(Primitiva p, String mensaje) throws MalMensajeProtocoloException {
         if (p == Primitiva.INFO || p == Primitiva.ADDED || p == Primitiva.NOTAUTH
                 || p == Primitiva.XAUTH || p == Primitiva.ERROR || p == Primitiva.EXIT
-                || p == Primitiva.READQ || p == Primitiva.STATE || p == Primitiva.DELETEQ) {
+                || p == Primitiva.READQ || p == Primitiva.STATE || p == Primitiva.DELETEQ
+                || p == Primitiva.BADCODE || p == Primitiva.EXIT) {
             this.mensaje = mensaje;
             this.idCola  = null;
         } else if (p == Primitiva.MSG) {

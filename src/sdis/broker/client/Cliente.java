@@ -1,4 +1,4 @@
-package sdis.broker;
+package sdis.broker.client;
 
 import sdis.broker.common.MensajeProtocolo;
 import sdis.broker.common.Primitiva;
@@ -86,6 +86,10 @@ public class Cliente {
                     } else if (mensajeEnviar.equals("EXIT")) {
                         mensajeProtocolo = new MensajeProtocolo(Primitiva.EXIT);
                         oos.writeObject(mensajeProtocolo);
+                        mensajeProtocolo = (MensajeProtocolo) ois.readObject();
+                        System.out.println(mensajeProtocolo.getMensaje());
+                        oos.close();
+                        ois.close();
                         return;
                     } else if (mensajeEnviar.equals("STATE")) {
                         System.out.println("Cola que deseas ver: ");
